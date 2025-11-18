@@ -14,11 +14,15 @@ namespace MySample
         #region Variables
         //참조
         private Animator animator;
+
         //이동
         private float walkSpeed = 4f;
         private float runSpeed = 8f;
+
         private float speed = 0f;
-        [SerializeField] private float accelate = 1f;
+        [SerializeField]
+        private float accelate = 1f;
+
 
         //애니메이터 파라미터 이름
         private string IsWalk = "IsWalk";
@@ -28,23 +32,30 @@ namespace MySample
 
         #region Property
         public bool Walk
-        { 
-            get { return animator.GetBool(IsWalk); }
+        {
+            get
+            {
+                return animator.GetBool(IsWalk);
+            }
         }
+
         public bool Run
         {
-            get { return animator.GetBool(IsRun); }
+            get
+            {
+                return animator.GetBool(IsRun);
+            }
         }
+
         public float Speed
         {
             get { return speed; }
-            set 
+            set
             {
                 speed = value;
                 animator.SetFloat(MoveSpeed, speed);
             }
-        }    
-
+        }
         #endregion
 
         #region Unity Event Method
@@ -65,6 +76,7 @@ namespace MySample
             {
                 animator.SetBool(IsWalk, false);
             }
+
             //뛰기
             if(Input.GetKeyDown(KeyCode.LeftShift))
             {
@@ -75,43 +87,45 @@ namespace MySample
                 animator.SetBool(IsRun, false);
             }
 
-            //이동속도 적용
-            if (Walk)
+            //이동 속도 적용
+            if(Walk)
             {
-                if (Run)
+                if(Run)
                 {
-                    speed += Time.deltaTime * accelate;
-                    if (speed > runSpeed)
+                    Speed += Time.deltaTime * accelate;
+                    if(Speed > runSpeed)
                         speed = runSpeed;
                 }
                 else
                 {
-                    if (speed > walkSpeed)
+                    if(Speed > walkSpeed)
                     {
-                        speed -= Time.deltaTime * accelate;
-                        if (speed < walkSpeed)
+                        Speed -= Time.deltaTime * accelate;
+                        if(Speed < walkSpeed)
                         {
-                            speed = walkSpeed;
+                            Speed = walkSpeed;
                         }
                     }
-                    else if (speed < walkSpeed)
+                    else if (Speed < walkSpeed)
                     {
-                        speed += Time.deltaTime * accelate;
-                        if (speed > walkSpeed)
+                        Speed += Time.deltaTime * accelate;
+                        if (Speed > walkSpeed)
                         {
-                            speed = walkSpeed;
+                            Speed = walkSpeed;
                         }
                     }
                 }
             }
             else
             {
-                speed -= Time.deltaTime * accelate;
-                if (speed < 0)
+                Speed -= Time.deltaTime * accelate;
+                if (Speed < 0)
                 {
-                    speed = 0;
+                    Speed = 0;
                 }
             }
+
+
         }
         #endregion
     }

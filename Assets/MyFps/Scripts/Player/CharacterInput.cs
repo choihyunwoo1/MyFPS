@@ -18,7 +18,8 @@ namespace MyFps
         private bool sprint = false;
 
         //점프 입력 값
-        bool jump =false;
+        [SerializeField]
+        private bool jump = false;
         #endregion
 
         #region Property
@@ -26,10 +27,10 @@ namespace MyFps
         public Vector2 Look => look;    //마우스 입력 값 읽기 전용
         public bool Sprint => sprint;   //뛰기 입력 값 읽기 전용
         public bool Jump
-        { 
-            get {return jump;}
-            set {jump = value;}
-        }                           //점프
+        {
+            get { return jump; }
+            set { jump = value; }
+        }
         #endregion
 
         #region Unity Event Method
@@ -40,11 +41,9 @@ namespace MyFps
             float moveY = Input.GetAxis("Vertical");
             MoveInput(moveX, moveY);
 
-            // 스프린트
-            sprint = Input.GetKey(KeyCode.LeftShift);
-
-            // 점프
-            Jump = Input.GetKeyDown(KeyCode.Space);
+            //점프 입력처리
+            bool isJump = Input.GetButtonDown("Jump");
+            JumpInput(isJump);
 
             //마우스 입력 처리
             float mouseX = Input.GetAxis("Mouse X");
@@ -59,8 +58,11 @@ namespace MyFps
             move = new Vector2(x, y);
         }
 
-        void JumpInput(bool isJump)
+        private void JumpInput(bool isJump)
         {
+            if (isJump == false)
+                return;
+
             jump = isJump;
         }
 
