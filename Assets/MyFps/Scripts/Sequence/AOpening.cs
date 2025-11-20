@@ -1,54 +1,55 @@
+using UnityEngine;
 using System.Collections;
 using TMPro;
-using UnityEngine;
 
 namespace MyFps
 {
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾ÀÀÇ ¿ÀÇÁ´× ¿¬Ãâ
+    /// í”Œë ˆì´ì”¬ì˜ ì˜¤í”„ë‹ ì—°ì¶œ 
     /// </summary>
     public class AOpening : MonoBehaviour
     {
         #region Variables
+        //í˜ì´ë” íš¨ê³¼
         public SceneFader fader;
 
-        //ÇÃ·¹ÀÌ¾î
+        //í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸
         public GameObject thePlayer;
 
-        //½ÃÄö½º ÅØ½ºÆ®
+        //ì‹œí€€ìŠ¤ í…ìŠ¤íŠ¸
         public TextMeshProUGUI sequenceText;
 
-        //½Ã³ª¸®¿À ÅØ½ºÆ®
+        //ì‹œë‚˜ë¦¬ì˜¤ í…ìŠ¤íŠ¸
         [SerializeField]
-        string sequence01 = "I need get out of here";
+        private string sequence01 = "I need get out of here";
         #endregion
 
         #region Unity Event Method
         private void Start()
         {
-            //½ÃÀÛÇÏÀÚ¸¶ÀÚ ¿ÀÇÁ´× ¿¬Ãâ
+            //ì‹œì‘í•˜ìë§ˆì ì˜¤í”„ë‹ ì—°ì¶œ
             StartCoroutine(SequencePlay());
         }
         #endregion
 
         #region Custom Method
-        //¿ÀÇÁ´× ½ÃÄö½º ¿¬Ãâ
+        //ì˜¤í”„ë‹ ì‹œí€€ìŠ¤ ì—°ì¶œ
         IEnumerator SequencePlay()
         {
-            //0.ÇÃ·¹ÀÌ Ä³¸¯ÅÍ ºñÈ°¼ºÈ­
+            //0.í”Œë ˆì´ ìºë¦­í„° ë¹„ í™œì„±í™”
             thePlayer.SetActive(false);
 
-            //1.1ÃÊ ´ë±âÈÄ ÆäÀÌµåÀÎ
+            //1.í˜ì´ë“œì¸ ì—°ì¶œ(1ì´ˆ ëŒ€ê¸°í›„ í˜ì¸ë“œì¸ íš¨ê³¼) - 2ì´ˆ
             fader.FadeStart(2f);
 
-            //2.È­¸é ÇÏ´Ü¿¡ ½Ã³ª¸®¿À ÅØ½ºÆ® Ãâ·Â 
+            //2.í™”ë©´ í•˜ë‹¨ì— ì‹œë‚˜ë¦¬ì˜¤ í…ìŠ¤íŠ¸ í™”ë©´ ì¶œë ¥(3ì´ˆ)
             sequenceText.text = sequence01;
 
-            //3.3ÃÊÈÄ ½Ã³ª¸®¿À ÅØ½ºÆ® ¼Ò¸ê
+            //3. 3ì´ˆí›„ì— ì‹œë‚˜ë¦¬ì˜¤ í…ìŠ¤íŠ¸ ì—†ì–´ì§„ë‹¤
             yield return new WaitForSeconds(3f);
-            sequenceText.text = ""; //ÃÊ±âÈ­
+            sequenceText.text = "";
 
-            //4.ÇÃ·¹ÀÌ Ä³¸¯ÅÍ È°¼ºÈ­
+            //4.í”Œë ˆì´ ìºë¦­í„° í™œì„±í™”
             thePlayer.SetActive(true);
         }
         #endregion

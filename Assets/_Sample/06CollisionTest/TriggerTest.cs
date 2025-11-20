@@ -3,45 +3,37 @@ using UnityEngine;
 namespace MySample
 {
     /// <summary>
-    /// Ãæµ¹Ã¼ÀÇ trigger Ãæµ¹ Ã¼Å©
+    /// ì¶©ëŒì²´ì˜ Trigger ì¶©ëŒ ì²´í¬
     /// </summary>
     public class TriggerTest : MonoBehaviour
     {
-        #region Variables
-        MoveObject mv;
-        #endregion
-
-        #region Unity Event Method
         private void OnTriggerEnter(Collider other)
         {
-            if (mv == null)
+            Debug.Log($"OnTriggerEnter: {other.name}");
+            //ì˜¤ë¥¸ìª½ìœ¼ë¡œ í˜(200f), ì»¬ëŸ¬ë¥¼ ë¹¨ê°„ìƒ‰
+            MoveObejct moveObejct = other.GetComponent<MoveObejct>();
+            if (moveObejct)
             {
-                mv.MoveRight();
-                mv.ChangeMoveColor();
+                moveObejct.MoveRigth();
+                moveObejct.ChangeMoveColor();
             }
-            Debug.Log($"OnTriggerEnter : {other.name}");
-
-            //¿À¸¥ÂÊÀ¸·Î Èû(200f), ÄÃ·¯¸¦ »¡°£»öÀ¸·Î
         }
+
         private void OnTriggerStay(Collider other)
         {
-            Debug.Log($"OnTriggerStay : {other.name}");
+            Debug.Log($"OnTriggerStay: {other.name}");
         }
+
         private void OnTriggerExit(Collider other)
         {
-            if (mv == null)
+            Debug.Log($"OnTriggerExit: {other.name}");
+            //ì˜¤ë¥¸ìª½ìœ¼ë¡œ í˜(200f), ì»¬ëŸ¬ë¥¼ ì˜¤ë¦¬ì§„
+            MoveObejct moveObejct = other.GetComponent<MoveObejct>();
+            if (moveObejct)
             {
-                mv.MoveRight();
-                mv.ResetMoveColor();
+                moveObejct.MoveRigth();
+                moveObejct.ResetMoveColor();
             }
-            Debug.Log($"OnTriggerExit : {other.name}");
-            //¿À¸¥ÂÊÀ¸·Î Èû(200f), ÄÃ·¯¸¦ ¿ø·¡´ë·Î
         }
-        #endregion
-
-        #region Custom Method
-
-        #endregion
-
     }
 }

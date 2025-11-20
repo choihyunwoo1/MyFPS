@@ -3,42 +3,35 @@ using UnityEngine;
 namespace MySample
 {
     /// <summary>
-    /// √Êµπ√º¿« collision √Êµπ √º≈©
+    /// Ï∂©ÎèåÏ≤¥Ïùò collision Ï∂©Îèå Ï≤¥ÌÅ¨
     /// </summary>
     public class CollisionTest : MonoBehaviour
     {
-        #region Variables
-        MoveObject mv;
-        #endregion
-
-        #region Unity Event Method
         private void OnCollisionEnter(Collision collision)
         {
-            if (mv == null)
+            Debug.Log($"OnCollisionEnter: {collision.gameObject.name}");
+            //ÏôºÏ™ΩÏúºÎ°ú Ìûò(200f)
+            MoveObejct moveObejct = collision.gameObject.GetComponent<MoveObejct>();
+            if(moveObejct)
             {
-                mv.MoveLeft();
+                moveObejct.MoveLeft();
             }
-            Debug.Log($"OnCollisionEnter : {collision.gameObject.name}");
-            //øﬁ¬ ¿∏∑Œ »˚(200f)
         }
+
         private void OnCollisionStay(Collision collision)
         {
-            Debug.Log($"OnCollisionStay : {collision.gameObject.name}");
+            Debug.Log($"OnCollisionStay: {collision.gameObject.name}");
         }
+
         private void OnCollisionExit(Collision collision)
         {
-            if (mv == null)
+            Debug.Log($"OnCollisionExit: {collision.gameObject.name}");
+            //ÏôºÏ™ΩÏúºÎ°ú Ìûò(200f)
+            MoveObejct moveObejct = collision.gameObject.GetComponent<MoveObejct>();
+            if (moveObejct)
             {
-                mv.MoveLeft();
+                moveObejct.MoveLeft();
             }
-            Debug.Log($"OnCollisionExit : {collision.gameObject.name}");
-            //øﬁ¬ ¿∏∑Œ »˚(200f)
         }
-        #endregion
-
-        #region Custom Method
-
-        #endregion
-
     }
 }

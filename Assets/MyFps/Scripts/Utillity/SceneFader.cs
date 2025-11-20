@@ -19,11 +19,8 @@ namespace MyFps
         #region Unity Event Method
         private void Start()
         {
-            //페이더 이미지를 검정색으로 시작 / 암전
+            //페이더 이미지를 검정색으로 시작 - 씬을 시작하면 무조건 암전
             img.color = new Color(0f, 0f, 0f, 1);
-
-            //시작하자 마자 페이드 인
-            FadeStart();
         }
         #endregion
 

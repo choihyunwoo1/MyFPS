@@ -3,41 +3,40 @@ using UnityEngine;
 namespace MyFps
 {
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î¿Í Á¤¸é¿¡ ÀÖ´Â ¿ÀºêÁ§Æ®¿ÍÀÇ °Å¸® ±¸ÇÏ±â
+    /// í”Œë ˆì´ì–´ì™€ ì •ë©´ì— ìˆëŠ” ì˜¤ë¸Œì íŠ¸ì™€ì˜ ê±°ë¦¬ êµ¬í•˜ê¸°
     /// </summary>
     public class PlayerCasting : MonoBehaviour
     {
         #region Variables
-        public static float distanceFromTarget; //ÇÃ·¹ÀÌ¾î¿Í Á¤¸é¿¡ ÀÖ´Â ¿ÀºêÁ§Æ®¿ÍÀÇ °Å¸®
+        public static float distanceFromTarget;    //í”Œë ˆì´ì–´ì™€ ì •ë©´ì— ìˆëŠ” ì˜¤ë¸Œì íŠ¸ì™€ì˜ ê±°ë¦¬
 
-        [SerializeField] float toTarget;
+        [SerializeField]
+        private float toTarget;     //í”Œë ˆì´ì–´ì™€ íƒ€ê²Ÿê³¼ì˜ ê±°ë¦¬
         #endregion
 
         #region Unity Event Method
         private void Update()
         {
-            //¿ÀºêÁ§Æ®¿ÍÀÇ °Å¸® ±¸ÇÏ±â
-            RaycastHit hit;  // hit ÇßÀ»¶§ hit Á¤º¸¸¦ ÀúÀå 
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit))
-            { 
-                //hit¿¡ ¼º°øÇÏ¸é
+            //ì˜¤ë¸Œì íŠ¸ì™€ì˜ ê±°ë¦¬ êµ¬í•˜ê¸°
+            RaycastHit hit;             //hití–ˆì„ë•Œ hitì •ë³´ë¥¼ ì €ì¥
+            if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit))
+            {
+                //hitì— ì„±ê³µí•˜ë©´
                 distanceFromTarget = hit.distance;
                 toTarget = distanceFromTarget;
             }
-
         }
-        #endregion
 
-        #region Custom Method
+        // ë ˆì´ì¼€ìŠ¤íŠ¸ ê¸°ì¦ˆëª¨ë¡œ ê·¸ë¦¬ê¸°
         private void OnDrawGizmosSelected()
         {
-            //·¹ÀÌ½î´Â °Å¸®
+            //ë ˆì´ì˜ëŠ” ê±°ë¦¬
             float maxDistance = 100f;
 
-            Gizmos.color = Color.red;
             RaycastHit hit;
-            bool isHit = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit);
+            bool isHit = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, maxDistance);
 
+            Gizmos.color = Color.red;
             if (isHit)
             {
                 Gizmos.DrawRay(transform.position, transform.forward * hit.distance);
