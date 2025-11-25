@@ -12,6 +12,10 @@ namespace MyFps
         public Door door;
 
         public GameObject robot;
+
+        //사운드
+        public AudioSource bgm01;
+        public AudioSource bgm02;
         #endregion
 
         #region Unity Event Method
@@ -33,6 +37,9 @@ namespace MyFps
         #region Custom Method
         private void SequencePlay()
         {
+            bgm01.Stop();
+            bgm02.Play();
+
             door.Activate();
             robot.SetActive(true);
         }

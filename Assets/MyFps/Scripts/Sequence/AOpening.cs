@@ -21,7 +21,12 @@ namespace MyFps
 
         //시나리오 텍스트
         [SerializeField]
-        private string sequence01 = "I need get out of here";
+        private string sequence01 = "Where Am I?";
+        [SerializeField]
+        private string sequence02 = "I need get out of here";
+
+        public AudioSource line01;
+        public AudioSource line02;
         #endregion
 
         #region Unity Event Method
@@ -40,16 +45,22 @@ namespace MyFps
             thePlayer.SetActive(false);
 
             //1.페이드인 연출(1초 대기후 페인드인 효과) - 2초
-            fader.FadeStart(2f);
+            fader.FadeStart(2f+3f);
 
             //2.화면 하단에 시나리오 텍스트 화면 출력(3초)
             sequenceText.text = sequence01;
 
             //3. 3초후에 시나리오 텍스트 없어진다
             yield return new WaitForSeconds(3f);
+
+            //4.화면 하단에 시나리오 텍스트 화면 출력(3초)
+            sequenceText.text = sequence02;
+
+            //5. 3초후에 시나리오 텍스트 없어진다
+            yield return new WaitForSeconds(3f);
             sequenceText.text = "";
 
-            //4.플레이 캐릭터 활성화
+            //6.플레이 캐릭터 활성화
             thePlayer.SetActive(true);
         }
         #endregion
