@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Unity.Burst.Intrinsics.X86;
 
 namespace MyFps
 {
@@ -11,11 +12,11 @@ namespace MyFps
         //시퀀스
         public Door door;
 
-        public GameObject robot;
-
         //사운드
         public AudioSource bgm01;
         public AudioSource bgm02;
+
+        public GameObject robot;
         #endregion
 
         #region Unity Event Method

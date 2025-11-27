@@ -1,28 +1,23 @@
-using TMPro;
 using UnityEngine;
+using TMPro;
 
 namespace MyFps
 {
     /// <summary>
-    /// UI - ammocount ∞πºˆ ∫∏ø©¡÷±‚
+    /// UI - AmmoCount Í∞ØÏàò Î≥¥Ïó¨Ï£ºÍ∏∞
     /// </summary>
     public class DrawAmmoCount : MonoBehaviour
     {
         #region Variables
+        //UI ÌÖçÏä§Ìä∏
         public TextMeshProUGUI ammoCountText;
         #endregion
 
         #region Unity Event Method
         private void Update()
         {
-            ammoCountText.text = PlayerStat.Instance.AmmoCount.ToString();            
-        }
-        #endregion
-
-        #region Custom Mehtod
-        public void TurnOnAmmoUI()
-        {
-            
+            //ammo UI
+            ammoCountText.text = PlayerStats.Instance.AmmonCount.ToString();
         }
         #endregion
     }

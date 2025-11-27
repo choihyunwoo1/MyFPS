@@ -3,20 +3,16 @@ using UnityEngine;
 namespace MyFps
 {
     /// <summary>
-    /// Ammo UI ±×¸®±â
-    /// ¼Õ¿¡ ÃÑÀ» µé°í ÀÖÀ¸¸é Ammo UI ±×¸®±â, ¼Õ¿¡ ÃÑÀÌ ¾øÀ¸¸é Ammo UI ¾È±×¸®±â
+    /// Ammo UI ê·¸ë¦¬ê¸°
+    /// ì†ì— ì´ì„ ë“¤ê³  ìˆìœ¼ë©´ Ammo UI ê·¸ë¦¬ê³ , ì†ì— ì´ì´ ì—†ìœ¼ë©´ Ammo UI ì•ˆê·¸ë¦¬ê¸°
     /// </summary>
     public class DrawAmmoUI : MonoBehaviour
     {
-        #region Variables
-        
-        #endregion
-
         #region Unity Event Method
         private void Start()
         {
-            //Ammo UI ±×¸®±â
-            bool isShow = PlayerStat.Instance.WeaponType != WeaponType.None;
+            //Ammo UI ê·¸ë¦¬ê¸°
+            bool isShow = PlayerStats.Instance.WeaponType != WeaponType.None;
             ShowAmmoUI(isShow);
         }
         #endregion

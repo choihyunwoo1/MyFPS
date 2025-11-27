@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace MyFps
@@ -13,8 +14,10 @@ namespace MyFps
         public GameObject fakePistol;
         public GameObject realPistol;
         public GameObject theMaker;
+
         public GameObject ammoUI;
-        public WeaponType weaponType = WeaponType.Pistol;   
+
+        public WeaponType weaponType = WeaponType.Pistol;
         #endregion
 
         #region Custom Method
@@ -29,9 +32,9 @@ namespace MyFps
             theMaker.SetActive(false);
 
             //현재 소지무기 셋팅
-            PlayerStat.Instance.SetWeaponType(weaponType);
+            PlayerStats.Instance.SetWeaponType(weaponType);
 
-            //ammoUI 활성화
+            //UI
             ammoUI.SetActive(true);
 
             //아이템 킬

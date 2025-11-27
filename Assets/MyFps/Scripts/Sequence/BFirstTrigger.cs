@@ -54,7 +54,7 @@ namespace MyFps
 
             //-대사 출력: "Looks like a weapon on that table."
             sequenceText.text = sequecne;
-            //오디오 출력
+            // 오디오 출력
             line03.Play();
 
             yield return new WaitForSeconds(2f); //- 2초 딜레이
