@@ -1,61 +1,97 @@
 using UnityEngine;
+using System.Collections;
 
 namespace MyFps
 {
     /// <summary>
-    /// µ¥¹ÌÁö¸¦ ÀÔÀ¸¸é ±úÁö´Â ¿ÀºêÁ§Æ®
-    /// ±úÁö´Â ¿¬Ãâ: Fake¿ÀºêÁ§Æ®°¡ ¾ø¾îÁö°í Break¿ÀºêÁ§Æ®°¡ È°¼ºÈ­µÈ´Ù.
+    /// ë°ë¯¸ì§€ë¥¼ ì…ìœ¼ë©´ ê¹¨ì§€ëŠ” ì˜¤ë¸Œì íŠ¸
+    /// ê¹¨ì§€ëŠ” ì—°ì¶œ : Fakeì˜¤ë¸Œì íŠ¸ê°€ ì—†ì–´ì§€ breakì˜¤ë¸Œì íŠ¸ í™œì„±í™”
     /// </summary>
     public class BreakableObject : MonoBehaviour, IDamageable
     {
         #region Variables
+        //ê¹¨ì§€ì§€ ì•ŠëŠ” ì˜¤ë¸Œì íŠ¸ ì²´í¬
+        [SerializeField]
+        private bool unBreakable = false;
 
-        [Header("HP ¼³Á¤")]
-        public float maxHp = 50f;
-        private float currentHp;
+        private float health;
+        [SerializeField]
+        private float maxHealth = 1f;
+        //ì£½ìŒ ì²´í¬, ê¹¨ì§ ì²´í¬
+        private bool isDeath = false;
 
-        [Header("±úÁö±â ¿¬Ãâ ¿ÀºêÁ§Æ®")]
-        public GameObject fakeObject;   // Æò¼Ò »óÅÂ
-        public GameObject breakObject;  // ±úÁø »óÅÂ (ºñÈ°¼ºÈ­ µÇ¾î ÀÖ¾î¾ß ÇÔ)
+        public GameObject fakeObject;       //ì˜¨ì „í•œ ì˜¤ë¸Œì íŠ¸   
+        public GameObject breakObject;      //ì¡°ê° ëª¨ìŒ ì˜¤ë¸Œì íŠ¸
+        public GameObject activateObject;   //ë¶€ì„œì§€ëŠ” ì—°ì¶œ ì˜¤ë¸Œì íŠ¸
 
-        private bool isBroken = false;
+        private BoxCollider collider;       //ë°ë¯¸ì§€ ì…ëŠ” ì¶©ëŒì²´
+
+        //ë¦¬ì›Œë“œ
+        public GameObject rewardItemPrefab;
         #endregion
 
         #region Unity Event Method
         private void Awake()
         {
-            currentHp = maxHp;
+            //ì°¸ì¡°
+            collider = GetComponent<BoxCollider>();
+        }
 
-            // breakObject´Â Ã³À½¿¡ ²¨Á® ÀÖ¾î¾ß ÇÔ
-            if (breakObject != null)
-                breakObject.SetActive(false);
+        private void Start()
+        {
+            //ì´ˆê¸°í™”
+            health = maxHealth;
         }
         #endregion
 
         #region Custom Method
         public void TakeDamage(float damage)
         {
-            if (isBroken) return;
+            //ê¹¨ì§€ì§€ ì•ŠëŠ” ì˜¤ë¸Œì íŠ¸ ì²´í¬
+            if (unBreakable)
+                return;
 
-            currentHp -= damage;
-
-            if (currentHp <= 0)
+            health -= damage;
+            
+            if(health <= 0f && isDeath == false)
             {
-                Break();
+                Die();
             }
         }
 
-        private void Break()
+        //
+        private void Die()
+        {   
+            isDeath = true;
+
+            StartCoroutine(Break());
+
+        }
+
+        IEnumerator Break()
         {
-            isBroken = true;
+            //ê¹¨ì§ ì²˜ë¦¬
+            collider.enabled = false;
 
-            // fakeObject ²ô±â
-            if (fakeObject != null)
-                fakeObject.SetActive(false);
+            fakeObject.SetActive(false);
+            breakObject.SetActive(true);
 
-            // breakObject ÄÑ±â
-            if (breakObject != null)
-                breakObject.SetActive(true);
+            yield return new WaitForSeconds(0.2f);
+            if (activateObject != null)
+            {
+                activateObject.SetActive(false);
+            }
+            //ì‚¬ìš´ë“œ
+            AudioManager.Instance.Play("PotterySmash");
+
+            yield return new WaitForSeconds(0.5f);
+            //ë¦¬ì›Œë“œ ì²˜ë¦¬
+            //í•„ë“œì— ì•„ì´í…œ ë–¨êµ¬ê¸°
+            if (rewardItemPrefab != null)
+            {
+                Instantiate(rewardItemPrefab, this.transform.position + new Vector3(0f, 1f, 0f), Quaternion.identity);
+            }
+            
         }
         #endregion
     }

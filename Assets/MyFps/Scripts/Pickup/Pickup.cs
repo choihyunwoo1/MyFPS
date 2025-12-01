@@ -12,14 +12,14 @@ namespace MyFps
         #endregion
 
         #region Variables
-        //흔들림
+        //흔들림 - 위아래
         [SerializeField] private float bobingAmount = 1f;    //흔들림 량
         [SerializeField] private float verticalBobFrequency = 1f;    //흔들림 속도
 
         private Vector3 startPosition;  //아이템의 처음 위치
 
         //회전
-        [SerializeField] float rotateSpeed = 90f;
+        [SerializeField] private float rotateSpeed = 360f;
         #endregion
 
         #region Unity Event Method
@@ -35,7 +35,7 @@ namespace MyFps
             float bobingAnimationPhase = (Mathf.Sin(Time.time * verticalBobFrequency)) * bobingAmount;
             transform.position = startPosition + Vector3.up * bobingAnimationPhase;
 
-            //회전 
+            //회전
             transform.Rotate(Vector3.up, Time.deltaTime * rotateSpeed, Space.World);
         }
 
