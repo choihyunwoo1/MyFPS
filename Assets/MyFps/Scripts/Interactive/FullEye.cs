@@ -1,5 +1,5 @@
-using TMPro;
 using UnityEngine;
+using TMPro;
 using System.Collections;
 
 namespace MyFps
@@ -7,49 +7,48 @@ namespace MyFps
     public class FullEye : Interactive
     {
         #region Variables
-        public GameObject leftEye;
-        public GameObject rightEye;
-        public GameObject doorSwitch;
+        public GameObject leftEye;      //ì•¡ì í¼ì¦ ì¡°ê°
+        public GameObject rightEye;     //ì•¡ì í¼ì¦ ì¡°ê°
+        public GameObject doorSwitch;   //ìˆ¨ê²¨ì§„ ë„ì–´ ìŠ¤ìœ„ì¹˜
 
-        //½ÇÆĞ ¸Ş¼¼Áö UI
+        //ì‹¤íŒ¨ ë©”ì„¸ì§€ UI
         public TextMeshProUGUI sequenceText;
         #endregion
 
         #region Custom Method
-
         protected override void DoAction()
         {
-            StartCoroutine(PutThePuzzlePices());
+            StartCoroutine(PutThePuzzlePieces());
         }
 
-        //ÆÛÁñ Á¶°¢ ¸ÂÃß±â
-        IEnumerator PutThePuzzlePices()
+        //í¼ì¦ ì¡°ê° ë§ì¶”ê¸°
+        IEnumerator PutThePuzzlePieces()
         {
             bool isLeft = PlayerStats.Instance.HavePuzzleItem(PuzzleItem.LeftEye);
-            bool isRight = PlayerStats.Instance.HavePuzzleItem(PuzzleItem.RightEye);
+            bool isRigth = PlayerStats.Instance.HavePuzzleItem(PuzzleItem.RightEye);
 
-            //ÆÛÁñ Á¶°¢ ¸ÂÃß±â
+            //í¼ì¦ ì¡°ê° ë§ì¶”ê¸°
             if (isLeft)
             {
                 leftEye.SetActive(true);
             }
-            if (isRight)
+            if (isRigth)
             {
                 rightEye.SetActive(true);
             }
 
-            //¸ğµç ÆÛÁñÁ¶°¢À» ´Ù ¸ÂÃß¾ú´ÂÁö È®ÀÎ
-            if (isLeft && isRight) //¼º°ø
+            //ëª¨ë“  í¼ì¦ ì¡°ê°ì„ ë‹¤ ë§ì¶”ì—ˆëŠ”ì§€ ì²´í¬
+            if(isLeft && isRigth)
             {
                 doorSwitch.SetActive(true);
             }
-            else //½ÇÆĞ
+            else // ì‹¤íŒ¨
             {
-                sequenceText.text = "Fill the Blank";
+                sequenceText.text = "Need more puzzle pieces";
                 yield return new WaitForSeconds(2f);
                 sequenceText.text = "";
 
-                //Ãæµ¹Ã¼ÀÇ Äİ¶óÀÌ´õ º¹±¸
+                //ì¶©ëŒì²´ ë³µêµ¬
                 collider.enabled = true;
             }
         }

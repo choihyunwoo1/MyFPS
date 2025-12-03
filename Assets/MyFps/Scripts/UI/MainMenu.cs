@@ -12,6 +12,10 @@ namespace MyFps
         public SceneFader fader;
         [SerializeField]
         private string loadToScene = "PlayScene01";
+
+        //UI
+        public GameObject optionUI;
+        public GameObject mainMenuUI;
         #endregion
 
         #region Unity Event Method
@@ -23,8 +27,9 @@ namespace MyFps
             //배경음 플레이
             AudioManager.Instance.PlayBGM("MenuMusic");
 
-            //초기화
-
+            // 커서 초기화
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
         #endregion
 
@@ -45,7 +50,7 @@ namespace MyFps
 
         public void Options()
         {
-            Debug.Log("Goto Option Menu");
+            ShowOptionUI();
         }
 
         public void Credits()
@@ -59,6 +64,19 @@ namespace MyFps
             Application.Quit();
 
             Debug.Log("QuitGame");
+        }
+
+        //옵션 보이기
+        private void ShowOptionUI()
+        { 
+            mainMenuUI.SetActive(false);
+            optionUI.SetActive(true);
+        }
+        //옵션 숨기기
+        public void HideOptionUI()
+        {
+            mainMenuUI.SetActive(true);
+            optionUI.SetActive(false);
         }
         #endregion
     }

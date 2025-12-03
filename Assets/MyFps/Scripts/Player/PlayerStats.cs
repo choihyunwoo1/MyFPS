@@ -94,9 +94,9 @@ namespace MyFps
             //아이템이 없다
             if (puzzleItem == PuzzleItem.None || puzzleItem == PuzzleItem.MaxPuzzleItem)
             {
-                Debug.Log("out of range");
+                Debug.Log("Out of range");
                 return false;
-            }
+            }   
 
             return puzzleItems[(int)puzzleItem];
         }
@@ -108,7 +108,7 @@ namespace MyFps
             //획득 실패
             if(puzzleItem == PuzzleItem.None || puzzleItem == PuzzleItem.MaxPuzzleItem)
             {
-                Debug.Log("out of range");
+                Debug.Log("Out of range");
                 return false;
             }
 

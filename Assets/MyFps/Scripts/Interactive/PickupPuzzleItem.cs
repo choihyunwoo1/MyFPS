@@ -3,29 +3,28 @@ using UnityEngine;
 namespace MyFps
 {
     /// <summary>
-    /// ÆÛÁñ ¾ÆÀÌÅÛ Áİ±â
+    /// í¼ì¦ ì•„ì´í…œ ì¤ê¸°
     /// </summary>
     public class PickupPuzzleItem : PickupItem
     {
         #region Variables
-        //È¹µæÇÒ ÆÛÁñ ¾ÆÀÌÅÛ, None, MaxPuzzleItem
+        //íšë“í•  í¼ì¦ ì•„ì´í…œ
         [SerializeField]
-        PuzzleItem puzzleItem = PuzzleItem.None;
+        private PuzzleItem puzzleItem = PuzzleItem.None;
         #endregion
 
         #region Custom Method
         protected override void DoAction()
         {
-            //ÆÛÁñ ¾ÆÀÌÅÛ È¹µæ
+            //í¼ì¦ ì•„ì´í…œ íšë“
             bool isGain = PlayerStats.Instance.GainPuzzleItem(puzzleItem);
 
             if (isGain)
             {
-                //¾ÆÀÌÅÛ Å³
+                //ì•„ì´í…œ í‚¬
                 Destroy(gameObject);
             }
         }
         #endregion
-
     }
 }

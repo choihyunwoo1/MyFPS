@@ -3,14 +3,14 @@ using UnityEngine;
 namespace MyFps
 {
     /// <summary>
-    /// �浹�� �浹���ӵ��� 1�̻��̸� �浹 ���� �÷���
+    /// 충돌시 충돌 상대속도가 1이상이면 충돌 사운드 플레이
     /// </summary>
-    public class FlyObject : MonoBehaviour
+    public class FlyObejct : MonoBehaviour
     {
         private void OnCollisionEnter(Collision collision)
         {
-            //���ӵ��� 1�̻��̸�
-            if (collision.relativeVelocity.magnitude > 1.0f)
+            //상대속도가 1이상이면
+            if(collision.relativeVelocity.magnitude > 1.0f)
             {
                 AudioManager.Instance.Play("DoorBang");
             }
