@@ -53,7 +53,7 @@ namespace MyFps
         private int wayPointIndex = 0;
 
         //처음 생성 위치
-        private Vector3 startPosition = Vector3.zero;
+        private Vector3 startPosion = Vector3.zero;
 
         //상태 - 추격
         [SerializeField]
@@ -75,9 +75,6 @@ namespace MyFps
         const string Fire = "Fire";
         #endregion
 
-        #region Property
-        #endregion
-
         #region Unity Event Method
         private void Awake()
         {
@@ -93,7 +90,7 @@ namespace MyFps
             //초기화
             health = maxHealth;
             wayPointIndex = 1;
-            startPosition = transform.position;
+            startPosion = transform.position;
 
             SetState(EnemyState.E_Idle);
         }
@@ -110,16 +107,16 @@ namespace MyFps
             {
                 SetState(EnemyState.E_Attack);
             }
-            else if (distacne <= detectDistance && isBack == false)    //디텍팅 거리 체크, 타겟을 잃어버리면
+            else if (distacne <= detectDistance && isBack == false)    //디텍팅 거리 체크
             {
-                    SetState(EnemyState.E_Chase);
+                SetState(EnemyState.E_Chase);
             }
 
             //상태 처리
             switch (currentState)
             {
                 case EnemyState.E_Idle:
-                    if (isPatrol)
+                    if(isPatrol)
                     {
                         countdown += Time.deltaTime;
                         if (countdown >= idleTimer)
@@ -149,8 +146,8 @@ namespace MyFps
                 case EnemyState.E_Chase: //추격
                     agent.SetDestination(thePlayer.position);
 
-                    if (distacne > detectDistance)    //디텍팅 거리 체크
-                    {
+                    if (distacne > detectDistance)    //디텍팅 거리 체크, 타겟을 잃어버리면
+                    {   
                         SetState(EnemyState.E_Walk);
                     }
                     break;
@@ -194,8 +191,9 @@ namespace MyFps
             beforeState = currentState; //현재 상태를 바로 이전 상태에 저장
             currentState = newState;    //현재 상태를 새로운 상태로 전환
 
-            //agent 초기화
+            //agenet 초기화
             agent.ResetPath();
+
 
             //상태별 초기값 설정
             switch (currentState)
@@ -208,14 +206,14 @@ namespace MyFps
                 case EnemyState.E_Walk:
                     //이동 목표 지점 설정
                     if (isPatrol)
-                    {
+                    {                        
                         agent.SetDestination(wayPoints[wayPointIndex].position);
                     }
                     else
                     {
-                        agent.SetDestination(startPosition);
+                        agent.SetDestination(startPosion);
                     }
-                        break;
+                    break;
 
                 case EnemyState.E_Attack:
                     //멈춤 - 이동 목표 지점을 현재 위치로 지정

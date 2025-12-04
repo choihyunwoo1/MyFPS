@@ -68,8 +68,8 @@ namespace MyFps
             OnActivate?.Invoke();
 
             foreach (var enemy in enemies)
-            { 
-                enemy.OnActive();   
+            {
+                enemy.OnActive();
             }
         }
 
