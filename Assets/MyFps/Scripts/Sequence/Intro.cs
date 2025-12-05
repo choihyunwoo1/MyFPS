@@ -1,0 +1,76 @@
+using UnityEngine;
+using Unity.Cinemachine;
+using System.Collections;
+
+namespace MyFps
+{
+    /// <summary>
+    /// 인트로 시퀀스
+    /// 카메라 애니메이션, UI 활성화, 라이트 꺼짐, 페이드 아웃 
+    /// </summary>
+    public class Intro : MonoBehaviour
+    {
+        #region variables
+        public SceneFader fader;
+        [SerializeField]
+        string loadToScene = "PlayScene01";
+        
+        public GameObject introUI;
+        public GameObject lights;
+
+        public CinemachineSplineCart cart;
+        bool isArrive = false; //카트 도착 여부
+        #endregion
+
+        #region Unity Event Method
+        void Start()
+        {
+            //페이드 인
+            fader.FadeStart();
+            AudioManager.Instance.PlayBGM("IntroBgm");
+        }
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) && isArrive == false)
+            { 
+                isArrive = true;
+                StartCoroutine(ExitIntro());
+                return;
+            }
+
+            //카트 포지션 체크
+            if (isArrive == false)
+            {
+                if (cart.SplinePosition >= 1)
+                {
+                    isArrive = true;
+
+                    StartCoroutine(ExitIntro());
+                }
+                else if (cart.SplinePosition >= 0.6)
+                {
+                    if (introUI.activeSelf == true)
+                        introUI.SetActive(false);
+                }
+                else if (cart.SplinePosition >= 0.4)
+                {
+                    if(introUI.activeSelf == false)
+                        introUI.SetActive(true);
+                }
+            }
+        }
+        #endregion
+
+        #region Custom Method
+        IEnumerator ExitIntro()
+        {
+            yield return new WaitForSeconds(2f);
+
+            lights.SetActive(false);
+            yield return new WaitForSeconds(1f);
+
+            fader.FadeTo(loadToScene);
+        }
+        #endregion
+    }
+}
