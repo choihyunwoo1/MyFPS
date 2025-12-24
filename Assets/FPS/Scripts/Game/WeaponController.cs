@@ -75,6 +75,13 @@ namespace Unity.FPS.Game
 
         [SerializeField] private int bulletsPerShot = 1;         //한번 쏠때 나오는 총알의 갯수
         [SerializeField] private float bulletSpreadAngle = 0f;   //총알이 퍼져나가는 각도, 0:정면으로 나간다
+
+        //ShootType - Charge: 발사버튼을 누르고 있으면 발사체의 데미지, 이동속도가 일정한 값까지 커진다
+        private float ammoUseOnStartCharge = 1f;    //차지 버튼을 누르기 위해 필요한 ammo 량
+        private float ammoUsageRateWhileCharging = 1f;  //차지하고 있는 동안 소모되는 ammo 량
+        private float maxChargeDuration = 2f;           //차지 최대 시간
+
+        public float lastChargeTriggerTimestamp;        //차지 누른 시간
         #endregion
 
         #region Property
@@ -82,7 +89,17 @@ namespace Unity.FPS.Game
         public GameObject SoucePrefab { get; set; }     //무기 프리팹 오브젝트
         public bool IsWeaponActive { get; private set; }    //무기 활성화 여부, true 이면 현재 들고 있는 무기
         public Vector3 MuzzleWorldVelocity { get; private set; }    //이번 프레임에서의 총구 속도
+        
+        public float CurrentAmmoRatio { get; private set; } //Ammo 게이지바 율
+
+        //ShootType - Charge:
+        public bool IsCharging { get; private set; }
         public float CurrentCharge { get; private set; }        //현재 충전 량
+
+        //재장전 - Reload
+        [SerializeField] private bool automaticRelaod = true;   //재장전 자동/수동
+        [SerializeField] private float ammoReloadRate = 1f;     //재장전 속도 (초당 재장전 량)
+        [SerializeField] private float ammoReloadDelay = 2f;    //발사후 딜레이 시간 이후 재장전
         #endregion
 
         #region Unity Event Method
@@ -102,8 +119,11 @@ namespace Unity.FPS.Game
 
         private void Update()
         {
+            UpdateCharge(); //충전 처리
+            UpdateAmmo();   //Ammo 처리
+
             //이번 프레임에서의 총구 속도 계산
-            if(Time.deltaTime > 0f)
+            if (Time.deltaTime > 0f)
             {
                 MuzzleWorldVelocity = (weaponMuzzle.position - lastMuzzlePosition) / Time.deltaTime;
                 lastMuzzlePosition = weaponMuzzle.position;
@@ -112,6 +132,78 @@ namespace Unity.FPS.Game
         #endregion
 
         #region Custom Method
+        //충전 처리
+        private void UpdateCharge()
+        {
+            if(IsCharging)
+            {
+                if(CurrentCharge < 1f)
+                {
+                    //풀차지까지 남은량
+                    float chargeLeft = 1 - CurrentCharge;
+
+                    float chargeAdd = 0f;
+                    if(maxChargeDuration <= 0f)
+                    {
+                        chargeAdd = chargeLeft;
+                    }
+                    else
+                    {
+                        chargeAdd = (1f / maxChargeDuration) * Time.deltaTime;
+                    }
+                    chargeAdd = Mathf.Clamp(chargeAdd, 0f, chargeLeft);
+
+                    //chargeAdd에 따른 Ammo 소비량을 구한다
+                    float ammoThisChargeRequire = chargeAdd * ammoUsageRateWhileCharging;
+                    if(ammoThisChargeRequire <= currentAmmo)
+                    {
+                        UseAmmo(ammoThisChargeRequire);
+                        CurrentCharge += chargeAdd;
+                        CurrentCharge = Mathf.Clamp01(CurrentCharge);
+                    }
+                }
+                else
+                {
+                    //100% 충전시 자동발사
+
+                }
+            }
+        }
+
+        //Ammo 처리
+        private void UpdateAmmo()
+        {
+            //Ammo Ratio 처리
+            if (maxAmmo == 0 || maxAmmo == Mathf.Infinity)
+            {
+                CurrentAmmoRatio = 1f;
+            }
+            else
+            {
+                CurrentAmmoRatio = currentAmmo / maxAmmo;
+            }
+
+            //재장전 처리 - 자동
+            if(automaticRelaod && currentAmmo < maxAmmo && IsCharging == false
+                && lastTimeShot + ammoReloadDelay < Time.time )
+            {
+                //초당 ammoReloadRate만큼 충전
+                currentAmmo += ammoReloadDelay * Time.deltaTime;
+                currentAmmo = Mathf.Clamp(currentAmmo, 0, maxAmmo);
+            }
+        }
+
+        //재장전 - 수동
+        public void Reload()
+        {
+            if (automaticRelaod || IsCharging == true)
+                return;
+
+            currentAmmo = maxAmmo;
+
+            //충전에 따른 비용 처리
+        }
+
         //무기 교체 - show: 활성화, 비활성
         public void ShowWeapon(bool show)
         {
@@ -144,10 +236,61 @@ namespace Unity.FPS.Game
                     break;
 
                 case WeaponShootType.Charge:
+                    if(inputHeld == true)
+                    {
+                        //충전시작
+                        TryBeginCharge();
+                    }
+                    if(inputUp == true)
+                    {
+                        //충전 끝 발사
+                        return TryReleaseCharge();
+                    }
                     break;
             }
 
             return false;
+        }
+
+        //충전시작
+        private void TryBeginCharge()
+        {
+            if(IsCharging == false && currentAmmo >= ammoUseOnStartCharge
+                && lastTimeShot + delayBeteenShots <= Time.time)
+            {
+                IsCharging = true;
+
+                //Ammo 소비
+                UseAmmo(ammoUseOnStartCharge);
+
+                lastChargeTriggerTimestamp = Time.time;
+            }
+        }
+
+        //충전 끝 발사
+        private bool TryReleaseCharge()
+        {
+            if(IsCharging)
+            {
+                HandleShoot();
+
+                //충전값 초기화
+                IsCharging = false;
+                CurrentCharge = 0f;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        //Ammo 소비
+        private void UseAmmo(float amount)
+        {
+            currentAmmo -= amount;
+            currentAmmo = Mathf.Clamp(currentAmmo, 0f, maxAmmo);
+
+            lastTimeShot = Time.time;
         }
 
         //발사: 성공, 실패
@@ -157,7 +300,6 @@ namespace Unity.FPS.Game
             if(currentAmmo >= 1f && lastTimeShot + delayBeteenShots <= Time.time)
             {
                 currentAmmo -= 1f;
-                Debug.Log($"currentAmmo: {currentAmmo}");
 
                 //슛 연출
                 HandleShoot();
@@ -176,8 +318,9 @@ namespace Unity.FPS.Game
 
             for (int i = 0; i < bulletsPerShotFinal; i++)
             {
+                Vector3 shotDirection = GetShotDirectionWithInSpread(weaponMuzzle);
                 ProjectileBase objectProjectile = Instantiate(prejectilePrefab, weaponMuzzle.position,
-                    Quaternion.identity);
+                    Quaternion.LookRotation(shotDirection));
                 objectProjectile.Shoot(this);
             }
 
@@ -198,6 +341,13 @@ namespace Unity.FPS.Game
 
             //슛 타임 저장
             lastTimeShot = Time.time;
+        }
+
+        //발사체가 퍼져 나가는 랜덤한 방향 구하기
+        private Vector3 GetShotDirectionWithInSpread(Transform shootTransform)
+        {
+            float spreadAngleRatio = bulletSpreadAngle / 180f;
+            return Vector3.Slerp(shootTransform.forward, UnityEngine.Random.insideUnitSphere, spreadAngleRatio);
         }
         #endregion
     }
